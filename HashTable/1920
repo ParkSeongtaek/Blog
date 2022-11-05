@@ -1,0 +1,70 @@
+#include<iostream>
+
+using namespace std;
+
+const int PN = 23;
+const int Node_Num = 100001;
+const int Hash_Num = 500003;
+
+
+int idx = 0;
+
+int N, inputNum;
+
+struct Node {
+	Node* next;
+	int data;
+};
+Node entries[Hash_Num];
+
+unsigned int gekey(int data) {
+	if (data < 0) data *= -1;
+	data *= PN;
+	return  data % Node_Num;
+}
+
+struct List {			//그럼 stack형으로 저장 되겠구만
+	Node* head;
+	void add(int data) {
+		Node* nextIdx = head; 
+		head = &entries[idx++];
+		head -> data = data;
+		head -> next = nextIdx;
+	}
+};
+List hasha[Hash_Num];
+
+
+int main() {
+	
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	
+	///'''''''''''''''''''''''''''''''''''''''''''''''
+	cin >> N;
+
+	for (int i = 0; i < N; i++) {
+		cin >> inputNum;
+		hasha[gekey(inputNum)].add(inputNum);
+	}
+
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> inputNum;
+		Node* tmp = hasha[gekey(inputNum)].head;
+		int flag = 0;
+		while (tmp != 0) {
+			if (tmp->data == inputNum) {
+				flag = 1;
+				break;
+			}
+			tmp = tmp->next;
+		}
+
+		if (flag ==1) cout << "1\n";
+		
+		else cout << "0\n";
+
+	}
+}
